@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Angelita 15111</title>
+
+</head>
+
+<body>
+
+    <header class="header">
+        <img class="img" src="img/angelita adesivo.svg" alt="img">
+    </header>
+    <section>
+        <div class="h1-principal">
+            <img src="img/texto-angelita.svg" alt="h1-angelita">
+        </div>
+    </section>
+    <main class="content">
+        <div class="video-container" id="videoContainer">
+            <div class="video-wrapper">
+                <iframe id="videoIframe" src="https://www.youtube.com/embed/0K-Sqbkl5EE?enablejsapi=1"
+                    title="Angelita (REELS)"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <div class="play-button" id="playButton"></div>
+            </div>
+        </div>
+
+        <button class="button">
+            <img src="img/botao.svg" alt="img botao">
+        </button>
+
+    </main>
+
+    <footer class="footer">
+        <div class="social-icons">
+            <a href="#"><img src="img/instagram.svg" alt="Instagram"></a>
+            <a href="#"><img src="img/facebook.svg" alt="Facebook"></a>
+            <a href="#"><img src="img/whatsapp.svg" alt="WhatsApp"></a>
+        </div>
+        <div class="content-section">
+            <div class="item">
+                <div class="text-block">
+                    <img src="img/card-1.svg" alt="card 1">
+                </div>
+                <div class="video-block">
+                    <img src="img/icon-play.svg" alt="Play Icon" class="play-icon">
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="text-block">
+                    <img src="img/card-2.svg" alt="card 2">
+                </div>
+                <div class="video-block">
+                    <img src="img/icon-play.svg" alt="Play Icon" class="play-icon">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        var videoContainer = document.getElementById('videoContainer');
+        var videoWrapper = document.querySelector('.video-wrapper');
+        var playButton = document.getElementById('playButton');
+        var videoIframe = document.getElementById('videoIframe');
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('videoIframe', {
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            playButton.addEventListener('click', function (e) {
+                e.stopPropagation();
+                if (videoContainer.classList.contains('expanded')) {
+                    player.playVideo();
+                } else {
+                    expandVideo();
+                }
+            });
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.ENDED) {
+                shrinkVideo();
+            }
+        }
+
+        function expandVideo() {
+            videoContainer.classList.add('expanded');
+            player.playVideo();
+        }
+
+        function shrinkVideo() {
+            videoContainer.classList.remove('expanded');
+            player.stopVideo();
+        }
+
+        // Adicionar evento para fechar o vídeo ao clicar fora dele
+        videoContainer.addEventListener('click', function (event) {
+            if (videoContainer.classList.contains('expanded') && !videoWrapper.contains(event.target)) {
+                shrinkVideo();
+            }
+        });
+
+        // Prevenir que cliques dentro do vídeo fechem ele
+        videoWrapper.addEventListener('click', function (event) {
+            event.stopPropagation();
+        });
+    </script>
+
+</body>
+
+</html>
