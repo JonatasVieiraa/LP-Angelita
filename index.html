@@ -47,27 +47,29 @@
                 </div>
             </section>
         </main>
-
-        <footer class="footer">
-            <div class="content-section">
-                <div class="item">
-                    <div class="text-block">
-                        <img src="img/card-1.svg" alt="Informação 1">
-                    </div>
-                    <div class="video-block">
-                        <img src="img/icon-play.svg" alt="Play Icon" class="play-icon">
-                    </div>
+        <section class="carousel-section">
+            <div class="carousel-container">
+                <div class="carousel-slide">
+                    <img src="img/carrosel-1.svg" alt="Carousel Image 1">
                 </div>
-
-                <div class="item">
-                    <div class="text-block">
-                        <img src="img/card-2.svg" alt="Informação 2">
-                    </div>
-                    <div class="video-block">
-                        <img src="img/icon-play.svg" alt="Play Icon" class="play-icon">
-                    </div>
+                <div class="carousel-slide">
+                    <img src="img/carrosel-2.svg" alt="Carousel Image 2">
+                </div>
+                <div class="carousel-slide">
+                    <img src="img/carrosel-3.svg" alt="Carousel Image 3">
+                </div>
+                <div class="carousel-slide">
+                    <img src="img/carrosel-4.svg" alt="Carousel Image 4">
                 </div>
             </div>
+        </section>
+
+        <hr class="divider">
+        <footer class="footer">
+            <p>
+                Coligação Capela em Primeiro Lugar (MDB, PRTB, Democracia Cristã e Agir) CNPJ: 56.515.184/0001-87
+                © 2024 - Angelita - Todos os direitos reservados
+            </p>
         </footer>
     </div>
 
@@ -129,6 +131,25 @@
         // Prevenir que cliques dentro do vídeo fechem ele
         videoWrapper.addEventListener('click', function (event) {
             event.stopPropagation();
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const carouselSlide = document.querySelector('.carousel-container');
+            const carouselImages = document.querySelectorAll('.carousel-slide');
+
+            let counter = 0;
+            const size = carouselImages[0].clientWidth;
+
+            function slideCarousel() {
+                if (counter >= carouselImages.length - 1) {
+                    counter = -1;
+                }
+                counter++;
+                carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+            }
+
+            setInterval(slideCarousel, 3000); // Change slide every 3 seconds
         });
     </script>
 
