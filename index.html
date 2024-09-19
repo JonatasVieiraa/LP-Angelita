@@ -49,17 +49,23 @@
         </main>
         <section class="carousel-section">
             <div class="carousel-container">
-                <div class="carousel-slide">
-                    <img src="img/carrosel-1.svg" alt="Carousel Image 1">
+                <div class="carousel-slide" data-index="3">
+                    <img src="img/carrosel-4.png" alt="Carousel Image 4">
                 </div>
-                <div class="carousel-slide">
-                    <img src="img/carrosel-2.svg" alt="Carousel Image 2">
+                <div class="carousel-slide" data-index="0">
+                    <img src="img/carrosel-1.png" alt="Carousel Image 1">
                 </div>
-                <div class="carousel-slide">
-                    <img src="img/carrosel-3.svg" alt="Carousel Image 3">
+                <div class="carousel-slide" data-index="1">
+                    <img src="img/carrosel-2.png" alt="Carousel Image 2">
                 </div>
-                <div class="carousel-slide">
-                    <img src="img/carrosel-4.svg" alt="Carousel Image 4">
+                <div class="carousel-slide" data-index="2">
+                    <img src="img/carrosel-3.png" alt="Carousel Image 3">
+                </div>
+                <div class="carousel-slide" data-index="3">
+                    <img src="img/carrosel-4.png" alt="Carousel Image 4">
+                </div>
+                <div class="carousel-slide" data-index="0">
+                    <img src="img/carrosel-1.png" alt="Carousel Image 1">
                 </div>
             </div>
         </section>
@@ -68,7 +74,7 @@
         <footer class="footer">
             <p>
                 Coligação Capela em Primeiro Lugar (MDB, PRTB, Democracia Cristã e Agir) CNPJ: 56.515.184/0001-87
-                © 2024 - Angelita - Todos os direitos reservados
+                © 2024 - Angela Maria Mariano Machado - Todos os direitos reservados
             </p>
         </footer>
     </div>
@@ -135,22 +141,107 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const carouselSlide = document.querySelector('.carousel-container');
-            const carouselImages = document.querySelectorAll('.carousel-slide');
+            const carouselContainer = document.querySelector('.carousel-container');
+            const slides = document.querySelectorAll('.carousel-slide');
+            const slideCount = 4; // Número de imagens únicas
+            let currentIndex = 1;
+            let startX;
+            let isDragging = false;
+            let startPos;
 
-            let counter = 0;
-            const size = carouselImages[0].clientWidth;
+            // Adicionar indicadores
+            const indicatorsContainer = document.createElement('div');
+            indicatorsContainer.classList.add('carousel-indicators');
+            for (let i = 0; i < slideCount; i++) {
+                const indicator = document.createElement('div');
+                indicator.classList.add('carousel-indicator');
+                indicator.addEventListener('click', () => goToSlide(i));
+                indicatorsContainer.appendChild(indicator);
+            }
+            document.querySelector('.carousel-section').appendChild(indicatorsContainer);
 
-            function slideCarousel() {
-                if (counter >= carouselImages.length - 1) {
-                    counter = -1;
-                }
-                counter++;
-                carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+            function updateCarousel() {
+                carouselContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+                updateIndicators();
             }
 
-            setInterval(slideCarousel, 3000); // Change slide every 3 seconds
+            function updateIndicators() {
+                const indicators = document.querySelectorAll('.carousel-indicator');
+                indicators.forEach((indicator, index) => {
+                    indicator.classList.toggle('active', index === currentIndex % slideCount);
+                });
+            }
+
+            function goToSlide(index) {
+                currentIndex = index + 1;
+                updateCarousel();
+            }
+
+            function handleTransitionEnd() {
+                if (currentIndex === 0) {
+                    carouselContainer.style.transition = 'none';
+                    currentIndex = slideCount;
+                    carouselContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+                    setTimeout(() => {
+                        carouselContainer.style.transition = 'transform 0.3s ease-in-out';
+                    }, 10);
+                } else if (currentIndex === slides.length - 1) {
+                    carouselContainer.style.transition = 'none';
+                    currentIndex = 1;
+                    carouselContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+                    setTimeout(() => {
+                        carouselContainer.style.transition = 'transform 0.3s ease-in-out';
+                    }, 10);
+                }
+                updateIndicators();
+            }
+
+            function startDrag(e) {
+                isDragging = true;
+                startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+                startPos = -currentIndex * 100;
+                carouselContainer.style.transition = 'none';
+            }
+
+            function drag(e) {
+                if (!isDragging) return;
+                const currentX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+                const diff = (currentX - startX) / carouselContainer.offsetWidth * 100;
+                carouselContainer.style.transform = `translateX(${startPos + diff}%)`;
+            }
+
+            function endDrag(e) {
+                if (!isDragging) return;
+                isDragging = false;
+                const currentX = e.type === 'touchend' ? e.changedTouches[0].clientX : e.clientX;
+                const diff = (currentX - startX) / carouselContainer.offsetWidth;
+
+                if (Math.abs(diff) > 0.2) {
+                    currentIndex += diff > 0 ? -1 : 1;
+                }
+
+                carouselContainer.style.transition = 'transform 0.3s ease-in-out';
+                updateCarousel();
+            }
+
+            carouselContainer.addEventListener('transitionend', handleTransitionEnd);
+            carouselContainer.addEventListener('mousedown', startDrag);
+            carouselContainer.addEventListener('touchstart', startDrag);
+            window.addEventListener('mousemove', drag);
+            window.addEventListener('touchmove', drag);
+            window.addEventListener('mouseup', endDrag);
+            window.addEventListener('touchend', endDrag);
+
+            // Iniciar o carrossel
+            updateCarousel();
+
+            // Avançar o carrossel automaticamente a cada 3 segundos
+            setInterval(() => {
+                currentIndex++;
+                updateCarousel();
+            }, 3000);
         });
+
     </script>
 
 </body>
