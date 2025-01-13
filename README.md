@@ -1,6 +1,7 @@
 # Santinho Online - Angelita
 
 Projeto de "santinho" online desenvolvido para candidatos compartilharem suas propostas de forma elegante e exclusiva.
+O Layout foi focado para atender com maior qualidade os dispositivos mobile.
 
 ## Como Rodar
 
